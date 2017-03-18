@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="col_eeeeee">#eeeeee</color>
+    <color name="tab_background_selected">#353434</color>
+    <color name="tab_background_unselected">#555555</color>
+    <color name="translucent">#80000000</color>
+
+    <color name="comment_video_bg">#5D5D5D</color>
+    <color name="app_color_prototype">#E96B56</color>
+    <color name="white">#FFFFFF</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="fuchsia">#FF00FF</color>
+    <color name="red">#FF0000</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="gray">#808080</color>
+    <color name="olive">#808000</color>
+    <color name="purple">#800080</color>
+    <color name="maroon">#800000</color>
+    <color name="aqua">#00FFFF</color>
+    <color name="lime">#00FF00</color>
+    <color name="teal">#008080</color>
+    <color name="green">#008000</color>
+    <color name="blue">#0000FF</color>
+    <color name="navy">#000080</color>
+    <color name="black">#000000</color>
+    <color name="app_blue">#31aef5</color>
+    <color name="app_blue_light">#B431aef5</color>
+    <color name="separator_color">#2997fd</color>
+    <color name="grey_1">#B3000000</color>
+    <color name="grey_2">#666666</color>
+    <color name="grey_3">#999999</color>
+    <color name="gey_4">#cccccc</color>
+    <color name="grey_5">#e1e1e1</color>
+    <color name="grey_6">#f3f3f3</color>
+    <color name="grey_7">#636363</color>
+    <color name="profile_screen_background">#d6dbe5</color>
+    <color name="translucent_menu">#BB000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="fb_blue">#3b5998</color>
+    <color name="translucent_white">#ccffffff</color>
+    <color name="translucent_white_2">#ddffffff</color>
+    <color name="menu_item_color">#414141</color>
+    <color name="coach_mark_background_color">#60ffffff</color>
+    <color name="opaque_black">#88000000</color>
+    <color name="grey_4">#bbbbbb</color>
+    <color name="transparent_white">#30ffffff</color>
+    <color name="google_plus_red">#d3483a</color>
+    <color name="black_1">#010000</color>
+    <color name="seperator_black">#363636</color>
+</resources>
