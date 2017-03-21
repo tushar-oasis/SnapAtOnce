@@ -30,6 +30,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+
+
 /**
  * Created by tushar on 16-03-2017.
  */
@@ -65,6 +67,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String fullFilePath = "";
     private String currentFlashMode = Camera.Parameters.FLASH_MODE_AUTO;
 
+    private byte[] byteDataHR;
+    private byte[] byteDataLR;
+
+    private boolean isPictureHR = true;
+
     private android.os.Handler handler;
 
     @Override
@@ -79,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cameraPreviewFrame.setBackgroundColor(Color.BLACK);
         cameraPreviewFrame.addView(cameraPreview);
         captureButtonHR.setOnClickListener(this);
+        flashButton.setOnClickListener(this);
+        switchCameraButton.setOnClickListener(this);
     }
 
     private void createCamera(int pictureQuality){
@@ -104,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cameraParameters.setPictureSize(optimalPreviewSize.width, optimalPreviewSize.height);
         cameraParameters.setPictureFormat(PixelFormat.JPEG);
         cameraParameters.setJpegQuality(pictureQuality);
+        cameraParameters.setWhiteBalance(Camera.Parameters.WHITE_BALANCE_AUTO);
+        cameraParameters.setAutoExposureLock(false);
         if(currentSelectedCamera == BACK_CAMERA){
             cameraParameters.setFlashMode(currentFlashMode);
             cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_MACRO);
@@ -222,25 +233,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    private void createPictureFile(byte[] data){
+        String fileName = "";
+        if(data == byteDataHR){
+            fileName = "IMG_HR" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()).toString() + ".jpg";
+        } else{
+            fileName = "IMG_LR" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()).toString() + ".jpg";
+        }
+
+        File externalStorageDirectory = new File(directoryPath);
+        externalStorageDirectory.mkdirs();
+        File picture = new File(externalStorageDirectory, fileName);
+        fullFilePath = picture.getAbsolutePath();
+        Log.d("tushar", fullFilePath);
+        try{
+            FileOutputStream outputStream = new FileOutputStream(picture);
+            outputStream.write(data);
+            outputStream.close();
+        } catch (FileNotFoundException fe){
+            fe.printStackTrace();
+        } catch (IOException ioe){
+            ioe.printStackTrace();
+        }
+    }
     private Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            String fileName = "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()).toString() + ".jpg";
-            File externalStorageDirectory = new File(directoryPath);
-            externalStorageDirectory.mkdirs();
-            File picture = new File(externalStorageDirectory, fileName);
-            fullFilePath = picture.getAbsolutePath();
-            Log.d("tushar", fullFilePath);
-            try{
-                FileOutputStream outputStream = new FileOutputStream(picture);
-                outputStream.write(data);
-                outputStream.close();
-            } catch (FileNotFoundException fe){
-                fe.printStackTrace();
-            } catch (IOException ioe){
-                ioe.printStackTrace();
+            if(isPictureHR){
+                Log.d("tushar", data.toString());
+                byteDataHR = data;
+                Log.d("tushar", byteDataHR.toString());
+            } else{
+                byteDataLR = data;
+                Log.d("tushar", byteDataLR.toString());
             }
-
         }
     };
 
@@ -253,18 +279,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void run() {
                     releaseCamera();
-                    createCamera(50);
+                    createCamera(30);
                     cameraPreviewFrame.removeAllViews();
                     cameraPreviewFrame.addView(cameraPreview);
                 }
-            }, 1000);
+            }, 1700);
             handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    isPictureHR = false;
                     handleCaptureButtonClick();
                 }
-            }, 2000);
+            }, 2700);
+            handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    createPictureFile(byteDataHR);
+                    createPictureFile(byteDataLR);
+                }
+            }, 6000);
+        } else if(v.getId() == flashButton.getId()){
+            handleFlashButtonClick();
+        } else if(v.getId() == switchCameraButton.getId()){
+            handleSwitchCameraButtonClick();
         }
+    }
+
+    private void handleFlashButtonClick(){
+        if(currentFlashMode == Camera.Parameters.FLASH_MODE_AUTO){
+            flashButton.setImageResource(R.drawable.ic_flash_off);
+            currentFlashMode = Camera.Parameters.FLASH_MODE_OFF;
+        } else if(currentFlashMode == Camera.Parameters.FLASH_MODE_OFF){
+            flashButton.setImageResource(R.drawable.ic_flash_on);
+            currentFlashMode = Camera.Parameters.FLASH_MODE_ON;
+        } else if(currentFlashMode == Camera.Parameters.FLASH_MODE_ON){
+            flashButton.setImageResource(R.drawable.ic_flash_auto);
+            currentFlashMode = Camera.Parameters.FLASH_MODE_AUTO;
+        }
+    }
+
+    private void handleSwitchCameraButtonClick(){
+        if(currentSelectedCamera  == BACK_CAMERA){
+            currentSelectedCamera = FRONT_CAMERA;
+        } else{
+            currentSelectedCamera = BACK_CAMERA;
+        }
+        releaseCamera();
+        createCamera(100);
+        cameraPreviewFrame.removeAllViews();
+        cameraPreviewFrame.addView(cameraPreview);
     }
 }
